@@ -1,45 +1,6 @@
 const express = require('express');
-const MongoClient = require('mongodb').MongoClient;
+//const MongoClient = require('mongodb').MongoClient;
 const router = express.Router();
-
-// MongoDB connection URL
-const url = 'mongodb://developer:uIfi3nWWSIDCL7Fw@3.7.124.168:27017/';
-router.get('/projects', async (req, res) => {
-    
-  try {
-    const client = new MongoClient(url, { useUnifiedTopology: true });
-    await client.connect();
-
-    const db = client.db('rps-prop');
-    const collection = db.collection('projects_testing');
-
-    const projection = {
-        projection:{
-            id: 1, 
-            project_status:1,
-            project_name:1,
-            location_map:1,
-            location_address:1,
-            images: 1,
-        }, 
-        sort:{id:1}, 
-        limit: 10
-    };
-    const filter = {
-        published_in_web: true,
-        project_status: { $in: ["Ready to Move", "Under Construction", "Booking in progress", "Booking near to end"] },
-        project_name: {$exists: true}
-    };
-
-    const documents = await collection.find(filter, projection).toArray();
-
-    client.close();
-
-    res.status(200).json({ success: true, data: documents });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'An error occurred while fetching documents.' });
-  }
-});
 
 //MYSQL CONNECTION#########################################################
 const mysql = require('mysql2');
